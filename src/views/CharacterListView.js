@@ -12,7 +12,15 @@ class CharacterListView extends React.Component {
 
   componentDidMount() {
     // call our action
-    this.props.initCharacter()
+    this.props.initCharacter(`https://swapi.co/api/people/`)
+  }
+
+  nextPageHandler = ()=>{
+    this.props.initCharacter(this.props.next)
+  }
+
+  previousHandler = ()=>{
+    this.props.initCharacter(this.props.previous)
   }
 
   render() {
@@ -20,10 +28,20 @@ class CharacterListView extends React.Component {
       // return something here to indicate that you are fetching data
       return <p>Page is Loading...</p>
     } 
+    let disableBtnNext; let disableBtnPrev;
+    !this.props.previous ? disableBtnPrev=true : disableBtnPrev= false
+    !this.props.next ? disableBtnNext=true : disableBtnNext= false
     return (
       <div className="CharactersList_wrapper">
-        {!this.props.error ? <CharacterList 
-        characters={this.props.characters} />:
+        {!this.props.error ? (
+        <div>
+          <CharacterList 
+          characters={this.props.characters} 
+          next={this.props.next}/>
+          <button onClick={this.previousHandler} disabled={disableBtnPrev}>Previous</button>
+          <button onClick={this.nextPageHandler} disabled={disableBtnNext}>Next</button>
+        </div>
+        ):
           <p>{this.props.error}</p>
       }
       </div>
@@ -37,7 +55,9 @@ const mapStateToProps = state =>{
   return {
     characters: state.charsReducer.characters,
     fetching: state.charsReducer.loading,
-    error: state.charsReducer.error
+    error: state.charsReducer.error,
+    next: state.charsReducer.next,
+    previous: state.charsReducer.previous
   }
 }
 

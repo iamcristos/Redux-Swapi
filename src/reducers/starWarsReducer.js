@@ -2,7 +2,9 @@ import /* we need our action types here*/ * as actions from "../actions/actions"
 const initialState = {
   characters: [],
   loading: false,
-  error: ''
+  error: '',
+  next: '',
+  previous: '',
   // Array characters, Boolean fetching, null error.
 };
 export const charsReducer = (state = initialState, action) => {
@@ -25,6 +27,13 @@ export const charsReducer = (state = initialState, action) => {
         ...state,
         error: action.payload
       }
+    case actions.NEXT:
+      return {
+        ...state,
+        next: action.payload
+      }
+    case actions.PREVIOUS:
+      return {...state, previous: action.payload}
     default:
       return state;
   }

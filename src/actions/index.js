@@ -30,11 +30,28 @@ const fetchFailure = (error)=>{
     }
 }
 
-export const initCharacter = ()=>{
+const nextPage = (url)=>{
+    return {
+        type: actions.NEXT,
+        payload: url
+    }
+}
+
+const previousPage = (url)=>{
+    return {
+        type: actions.PREVIOUS,
+        payload: url
+    }
+}
+
+export const initCharacter = (url)=>{
     return async (dispatch)=> {
         dispatch(loading(true))
         try {
-            const fetchCharacter = await axios.get(`https://swapi.co/api/people/`)
+            const fetchCharacter = await axios.get(url);
+            console.log(fetchCharacter.data)
+            dispatch(nextPage(fetchCharacter.data.next))
+            dispatch(previousPage(fetchCharacter.data.previous))
             dispatch(fetchSuccess(fetchCharacter.data.results))
         } catch (error) {
             dispatch(fetchFailure(error.message))
